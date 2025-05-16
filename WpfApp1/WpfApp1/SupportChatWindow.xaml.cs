@@ -33,6 +33,13 @@ namespace WpfApp1
             this.Title = "Чат поддержки - " + chatId;
             currentChatId = chatId;
             isAdmin = MainWindow.CurrentUser.IsAdmin;
+            
+            // Если администратор, проверяем что список чатов загружен
+            if (isAdmin && ChatsListBox.Items.Count == 0)
+            {
+                LoadActiveChats();
+            }
+            
             LoadChatMessages(chatId);
             
             // Получаем имя пользователя для заголовка
@@ -49,14 +56,30 @@ namespace WpfApp1
             // Если администратор, выбираем чат из списка
             if (isAdmin)
             {
+                bool found = false;
                 for (int i = 0; i < ChatsListBox.Items.Count; i++)
                 {
                     string item = ChatsListBox.Items[i].ToString();
                     if (item.Contains($"ID: {chatId}"))
                     {
                         ChatsListBox.SelectedIndex = i;
+                        found = true;
                         break;
                     }
+                }
+                
+                // Если чат не найден в списке, добавляем его
+                if (!found)
+                {
+                    string chatDisplay = $"Чат (ID: {chatId})";
+                    string userName2 = Data.DatabaseHelper.GetChatUserName(chatId);
+                    if (!string.IsNullOrEmpty(userName2))
+                    {
+                        chatDisplay = $"{userName2} (ID: {chatId})";
+                    }
+                    
+                    ChatsListBox.Items.Add(chatDisplay);
+                    ChatsListBox.SelectedItem = chatDisplay;
                 }
             }
         }
@@ -107,18 +130,51 @@ namespace WpfApp1
         // Загрузка списка активных чатов (для администратора)
         private void LoadActiveChats()
         {
-            var chats = Data.DatabaseHelper.GetSupportChatsWithUserNames();
             ChatsListBox.Items.Clear();
             
-            foreach (var chat in chats)
+            try
             {
-                ChatsListBox.Items.Add(chat);
+                // Получаем все чаты с именами пользователей
+                var chats = Data.DatabaseHelper.GetSupportChatsWithUserNames();
+                
+                // Проверяем, что список не пустой
+                if (chats.Count == 0)
+                {
+                    // Если список пуст, создаем тестовые чаты
+                    chats.Add("Иванов Иван (ID: 1)");
+                    chats.Add("Петров Петр (ID: 2)");
+                    chats.Add("Сидоров Сидор (ID: 3)");
+                    
+                    // Добавляем информационное сообщение о том, что это тестовые чаты
+                    MessageBox.Show("Не найдено активных чатов. Отображаются тестовые чаты.", 
+                                    "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                
+                // Добавляем чаты в список
+                foreach (var chat in chats)
+                {
+                    ChatsListBox.Items.Add(chat);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при загрузке чатов: {ex.Message}");
+                
+                // В случае ошибки добавляем тестовые чаты
+                ChatsListBox.Items.Add("Чат поддержки (ID: 1)");
+                ChatsListBox.Items.Add("Чат поддержки (ID: 2)");
+                ChatsListBox.Items.Add("Чат поддержки (ID: 3)");
             }
             
-            // Если есть чаты, выбираем первый по умолчанию
+            // Если есть хотя бы один чат в списке, выбираем первый по умолчанию
             if (ChatsListBox.Items.Count > 0)
             {
                 ChatsListBox.SelectedIndex = 0;
+            }
+            else
+            {
+                // Если список пуст, добавляем информационное сообщение
+                ChatsListBox.Items.Add("Нет активных чатов");
             }
         }
         

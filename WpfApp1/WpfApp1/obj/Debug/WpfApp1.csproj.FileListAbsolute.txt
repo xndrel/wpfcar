@@ -11,6 +11,7 @@ C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\MainWindow.baml
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\PaymentWindow.baml
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\ProfileWindow.baml
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\RentalControlWindow.baml
+C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\RentalHistoryWindow.baml
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\SupportChatWindow.baml
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\AddCarWindow.g.cs
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\AdminPanel.g.cs
@@ -22,6 +23,7 @@ C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\MainWindow.g.cs
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\PaymentWindow.g.cs
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\ProfileWindow.g.cs
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\RentalControlWindow.g.cs
+C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\RentalHistoryWindow.g.cs
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\SupportChatWindow.g.cs
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\App.g.cs
 C:\Users\yadib\Downloads\0\WpfApp1\WpfApp1\obj\Debug\GeneratedInternalTypeHelper.g.cs

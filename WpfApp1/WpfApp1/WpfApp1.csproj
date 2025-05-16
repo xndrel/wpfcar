@@ -84,6 +84,9 @@
     <Compile Include="RentalControlWindow.xaml.cs">
       <DependentUpon>RentalControlWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RentalHistoryWindow.xaml.cs">
+      <DependentUpon>RentalHistoryWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SupportChatWindow.xaml.cs">
       <DependentUpon>SupportChatWindow.xaml</DependentUpon>
     </Compile>
@@ -143,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RentalControlWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RentalHistoryWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

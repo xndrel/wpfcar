@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using WpfApp1;
 
 namespace WpfApp1
 {
@@ -85,64 +86,177 @@ namespace WpfApp1
                     
                     try
                     {
-                        // Примерный формат: RentalID: 1, CarID: 2, Start: 2023-05-15 10:00:00, End: 2023-05-15 12:00:00, Duration: 2 hours
-                        string[] parts = record.Split(new string[] { ", " }, StringSplitOptions.None);
-                        if (parts.Length < 5)
+                        // Новый формат:
+                        // Аренда №1: 10.05.2023 10:00 - 10.05.2023 12:00, Автомобиль: BMW X5, Продолжительность: 2 ч., Стоимость: 900 руб.
+                        
+                        // Извлекаем дату аренды
+                        string rentalDate = "";
+                        string carInfo = "";
+                        string duration = "";
+                        string cost = "";
+                        
+                        if (record.Contains("Аренда №"))
                         {
-                            Console.WriteLine($"Недостаточно данных в записи: {record}");
-                            continue;
-                        }
-                        
-                        string rentalIdPart = parts[0];
-                        string carIdPart = parts[1];
-                        string startTimePart = parts[2];
-                        string endTimePart = parts[3];
-                        string durationPart = parts[4];
-                        
-                        int rentalId = int.Parse(rentalIdPart.Split(':')[1].Trim());
-                        int carId = int.Parse(carIdPart.Split(':')[1].Trim());
-                        
-                        // Обрабатываем время начала - формат примерно "Start: 2023-05-15 10:00:00"
-                        string startTimeStr = startTimePart.Substring(startTimePart.IndexOf(':') + 1).Trim();
-                        DateTime startTime = DateTime.Parse(startTimeStr);
-                        
-                        // Обрабатываем время окончания - формат примерно "End: 2023-05-15 12:00:00"
-                        string endTimeStr = endTimePart.Substring(endTimePart.IndexOf(':') + 1).Trim();
-                        DateTime endTime = DateTime.Parse(endTimeStr);
-                        
-                        // Обрабатываем длительность - формат примерно "Duration: 2 hours"
-                        string durationStr = durationPart.Substring(durationPart.IndexOf(':') + 1).Trim();
-                        double hours = double.Parse(durationStr.Split(' ')[0]);
-                        
-                        // Получаем информацию об автомобиле
-                        string carInfo = "Авто ID: " + carId;
-                        try
-                        {
-                            Car car = Data.DatabaseHelper.GetCarById(carId);
-                            if (car != null)
+                            // Обрабатываем новый формат данных
+                            string[] mainParts = record.Split(new string[] { ", " }, StringSplitOptions.None);
+                            
+                            // Обрабатываем первую часть с датой
+                            if (mainParts.Length > 0 && mainParts[0].Contains(":"))
                             {
-                                carInfo = car.Brand + " " + car.Model;
+                                string[] dateParts = mainParts[0].Split(new string[] { ": ", " - " }, StringSplitOptions.None);
+                                if (dateParts.Length >= 2)
+                                {
+                                    rentalDate = dateParts[1]; // Берем дату начала
+                                }
+                            }
+                            
+                            // Информация об автомобиле
+                            if (mainParts.Length > 1 && mainParts[1].StartsWith("Автомобиль:"))
+                            {
+                                carInfo = mainParts[1].Substring("Автомобиль:".Length).Trim();
+                            }
+                            
+                            // Продолжительность
+                            if (mainParts.Length > 2 && mainParts[2].StartsWith("Продолжительность:"))
+                            {
+                                duration = mainParts[2].Substring("Продолжительность:".Length).Trim();
+                            }
+                            
+                            // Стоимость
+                            if (mainParts.Length > 3 && mainParts[3].StartsWith("Стоимость:"))
+                            {
+                                cost = mainParts[3].Substring("Стоимость:".Length).Trim();
                             }
                         }
-                        catch (Exception ex) 
-                        { 
-                            Console.WriteLine($"Ошибка при получении данных автомобиля: {ex.Message}"); 
+                        else if (record.Contains("CarID:"))
+                        {
+                            // Обрабатываем старый формат данных
+                            string[] parts = record.Split(new string[] { ", " }, StringSplitOptions.None);
+                            
+                            string startTimePart = "";
+                            string durationPart = "";
+                            int carId = 0;
+                            
+                            for (int i = 0; i < parts.Length; i++)
+                            {
+                                if (parts[i].StartsWith("CarID:"))
+                                {
+                                    carId = int.Parse(parts[i].Split(':')[1].Trim());
+                                }
+                                else if (parts[i].StartsWith("Start:"))
+                                {
+                                    startTimePart = parts[i].Substring(parts[i].IndexOf(':') + 1).Trim();
+                                }
+                                else if (parts[i].StartsWith("Duration:"))
+                                {
+                                    durationPart = parts[i].Substring(parts[i].IndexOf(':') + 1).Trim();
+                                }
+                            }
+                            
+                            // Обрабатываем время начала
+                            if (!string.IsNullOrEmpty(startTimePart))
+                            {
+                                try
+                                {
+                                    DateTime startTime = DateTime.Parse(startTimePart);
+                                    rentalDate = startTime.ToShortDateString();
+                                }
+                                catch
+                                {
+                                    rentalDate = startTimePart;
+                                }
+                            }
+                            
+                            // Обрабатываем длительность
+                            if (!string.IsNullOrEmpty(durationPart))
+                            {
+                                string[] durationParts = durationPart.Split(' ');
+                                if (durationParts.Length > 0)
+                                {
+                                    double hours = 0;
+                                    double.TryParse(durationParts[0], out hours);
+                                    duration = hours + " ч.";
+                                    
+                                    // Рассчитываем стоимость
+                                    decimal costValue = (decimal)hours * 450;
+                                    cost = costValue.ToString("F2") + " руб.";
+                                }
+                            }
+                            
+                            // Получаем информацию об автомобиле
+                            carInfo = "Авто ID: " + carId;
+                            try
+                            {
+                                Car car = Data.DatabaseHelper.GetCarById(carId);
+                                if (car != null)
+                                {
+                                    carInfo = car.Brand + " " + car.Model;
+                                }
+                            }
+                            catch (Exception ex) 
+                            { 
+                                Console.WriteLine($"Ошибка при получении данных автомобиля: {ex.Message}"); 
+                            }
                         }
-
-                        // Рассчитываем стоимость (можно было бы получить реальную стоимость из БД)
-                        decimal cost = (decimal)hours * 450; // Примерная стоимость
-
+                        else if (record.Contains("Тестовая аренда:") || record.Contains("Последняя аренда:"))
+                        {
+                            // Обрабатываем формат заглушки
+                            string[] parts = record.Split(new string[] { ", " }, StringSplitOptions.None);
+                            
+                            // Дата
+                            if (parts.Length > 0)
+                            {
+                                string[] dateParts = parts[0].Split(':');
+                                if (dateParts.Length > 1)
+                                {
+                                    rentalDate = dateParts[1].Trim().Split(' ')[0];
+                                }
+                            }
+                            
+                            // Автомобиль
+                            if (parts.Length > 1)
+                            {
+                                carInfo = parts[1].Replace("Автомобиль:", "").Trim();
+                            }
+                            
+                            // Продолжительность
+                            if (parts.Length > 2)
+                            {
+                                duration = parts[2].Replace("Продолжительность:", "").Trim();
+                            }
+                            
+                            // Стоимость
+                            if (parts.Length > 3)
+                            {
+                                cost = parts[3].Replace("Стоимость:", "").Trim();
+                            }
+                        }
+                        
+                        // Проверяем, что у нас есть все данные
+                        if (string.IsNullOrEmpty(rentalDate)) rentalDate = "-";
+                        if (string.IsNullOrEmpty(carInfo)) carInfo = "Нет данных";
+                        if (string.IsNullOrEmpty(duration)) duration = "-";
+                        if (string.IsNullOrEmpty(cost)) cost = "-";
+                        
                         historyItems.Add(new RentalHistoryItem
                         {
-                            RentalDate = startTime.ToShortDateString(),
+                            RentalDate = rentalDate,
                             CarInfo = carInfo,
-                            Duration = hours + " ч.",
-                            Cost = cost.ToString("F2") + " руб."
+                            Duration = duration,
+                            Cost = cost
                         });
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Ошибка при обработке записи: {ex.Message}");
+                        // Добавляем запись "как есть" для отладки
+                        historyItems.Add(new RentalHistoryItem
+                        {
+                            RentalDate = "Ошибка",
+                            CarInfo = record,
+                            Duration = "-",
+                            Cost = ex.Message
+                        });
                     }
                 }
 
@@ -159,12 +273,42 @@ namespace WpfApp1
                     });
                 }
 
-                RentalHistoryListView.ItemsSource = historyItems;
+                // Сохраняем историю аренд для использования в окне истории
+                this.rentalHistory = historyItems;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Ошибка при загрузке истории аренд: " + ex.Message);
                 Console.WriteLine($"Исключение при загрузке истории аренд: {ex.Message}");
+                
+                // Создаем пустую историю при ошибке
+                this.rentalHistory = new List<RentalHistoryItem>();
+                this.rentalHistory.Add(new RentalHistoryItem
+                {
+                    RentalDate = "Ошибка",
+                    CarInfo = "Не удалось загрузить историю аренд",
+                    Duration = "-",
+                    Cost = "-"
+                });
+            }
+        }
+
+        // Добавляем новое поле для хранения истории аренд
+        private List<RentalHistoryItem> rentalHistory = new List<RentalHistoryItem>();
+
+        // Реализация обработчика нажатия кнопки показа истории
+        private void ShowHistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Открываем окно истории аренды, передавая ID пользователя
+                RentalHistoryWindow historyWindow = new RentalHistoryWindow(userId);
+                historyWindow.Owner = this;
+                historyWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при открытии окна истории: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
