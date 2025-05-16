@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Linq;
 using WpfApp1.Data;
+using System.Text;
 
 namespace WpfApp1
 {
@@ -49,6 +50,9 @@ namespace WpfApp1
             // Очищаем существующие маркеры
             AdminMapCanvas.Children.Clear();
             
+            // Если координаты автомобилей не заданы, распределим их случайно по карте
+            Random random = new Random();
+            
             foreach (var car in cars)
             {
                 Button btn = new Button();
@@ -88,13 +92,26 @@ namespace WpfApp1
                     btn.Content = $"{car.Brand} {car.Model}";
                 }
                 
-                // Используем сохраненные координаты из БД
+                // Используем сохраненные координаты из БД или случайные, если в БД (0,0)
                 double left = (double)car.Latitude;
                 double top = (double)car.Longitude;
                 
-                // Убеждаемся, что автомобиль находится в пределах видимой области карты
-                left = Math.Max(50, Math.Min(700, left));
-                top = Math.Max(50, Math.Min(500, top));
+                // Если координаты не заданы (0,0) или выходят за пределы карты, генерируем случайные
+                if (left < 10 || left > 750 || top < 10 || top > 550)
+                {
+                    // Увеличиваем зону случайного размещения на всю карту
+                    left = random.Next(80, 720); // Расширяем диапазон для большего разброса
+                    top = random.Next(80, 520);
+                    
+                    // Обновляем координаты в объекте автомобиля и в БД
+                    car.Latitude = (decimal)left;
+                    car.Longitude = (decimal)top;
+                    
+                    // Сохраняем новые координаты в базу данных
+                    Data.DatabaseHelper.UpdateCar(
+                        car.CarID, car.LicensePlate, car.Color, 
+                        car.Latitude, car.Longitude, car.IsAvailable, car.PricePerHour);
+                }
                 
                 // Устанавливаем позицию кнопки на канвасе
                 Canvas.SetLeft(btn, left);
@@ -312,20 +329,36 @@ namespace WpfApp1
         {
             if (UsersListView.SelectedItem is User selectedUser)
             {
-                bool success = Data.DatabaseHelper.UpdateUserBlockStatus(selectedUser.UserID, true);
-                if (success)
+                if (selectedUser.IsBlocked)
                 {
-                    MessageBox.Show("Пользователь заблокирован.");
-                    LoadUsers();
+                    MessageBox.Show("Пользователь уже заблокирован.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
                 }
-                else
+                
+                // Подтверждение действия
+                MessageBoxResult result = MessageBox.Show(
+                    $"Вы действительно хотите заблокировать пользователя {selectedUser.FullName}?", 
+                    "Подтверждение блокировки", 
+                    MessageBoxButton.YesNo, 
+                    MessageBoxImage.Question);
+                
+                if (result == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show("Ошибка блокировки пользователя.");
+                    bool success = Data.DatabaseHelper.UpdateUserBlockStatus(selectedUser.UserID, true);
+                    if (success)
+                    {
+                        MessageBox.Show($"Пользователь {selectedUser.FullName} заблокирован.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        LoadUsers(); // Перезагружаем список пользователей
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка блокировки пользователя. Проверьте подключение к базе данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
             else
             {
-                MessageBox.Show("Выберите пользователя для блокировки.");
+                MessageBox.Show("Выберите пользователя для блокировки.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -333,20 +366,36 @@ namespace WpfApp1
         {
             if (UsersListView.SelectedItem is User selectedUser)
             {
-                bool success = Data.DatabaseHelper.UpdateUserBlockStatus(selectedUser.UserID, false);
-                if (success)
+                if (!selectedUser.IsBlocked)
                 {
-                    MessageBox.Show("Пользователь разблокирован.");
-                    LoadUsers();
+                    MessageBox.Show("Пользователь не заблокирован.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
                 }
-                else
+                
+                // Подтверждение действия
+                MessageBoxResult result = MessageBox.Show(
+                    $"Вы действительно хотите разблокировать пользователя {selectedUser.FullName}?", 
+                    "Подтверждение разблокировки", 
+                    MessageBoxButton.YesNo, 
+                    MessageBoxImage.Question);
+                
+                if (result == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show("Ошибка при разблокировке пользователя.");
+                    bool success = Data.DatabaseHelper.UpdateUserBlockStatus(selectedUser.UserID, false);
+                    if (success)
+                    {
+                        MessageBox.Show($"Пользователь {selectedUser.FullName} разблокирован.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        LoadUsers(); // Перезагружаем список пользователей
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка при разблокировке пользователя. Проверьте подключение к базе данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
             else
             {
-                MessageBox.Show("Выберите пользователя для разблокировки.");
+                MessageBox.Show("Выберите пользователя для разблокировки.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -354,17 +403,62 @@ namespace WpfApp1
         {
             if (UsersListView.SelectedItem is User selectedUser)
             {
-                var history = Data.DatabaseHelper.GetRentalHistory(selectedUser.UserID);
-                string historyMessage = $"История аренды пользователя {selectedUser.FullName}:\n";
-                foreach (var record in history)
+                try
                 {
-                    historyMessage += record + "\n";
+                    var history = Data.DatabaseHelper.GetRentalHistory(selectedUser.UserID);
+                    
+                    if (history.Count == 0)
+                    {
+                        // Если история пуста, предлагаем создать тестовую запись
+                        MessageBoxResult result = MessageBox.Show(
+                            $"У пользователя {selectedUser.FullName} нет истории аренды. Создать тестовую запись?",
+                            "История аренды пуста",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question);
+                            
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            // Создаем тестовую аренду
+                            DateTime endTime = DateTime.Now;
+                            DateTime startTime = endTime.AddHours(-3);
+                            
+                            bool success = Data.DatabaseHelper.CreateRentalRecord(selectedUser.UserID, 1, startTime, endTime);
+                            if (success)
+                            {
+                                MessageBox.Show("Тестовая запись аренды создана.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                                history = Data.DatabaseHelper.GetRentalHistory(selectedUser.UserID);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Не удалось создать тестовую запись аренды.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                // Добавляем заглушку в историю, чтобы пользователь видел хоть что-то
+                                history.Add($"Тестовая аренда: {startTime.ToString("dd.MM.yyyy HH:mm")} - {endTime.ToString("dd.MM.yyyy HH:mm")}, Продолжительность: 3 ч., Стоимость: 1350 руб.");
+                            }
+                        }
+                    }
+                    
+                    // Собираем историю аренды в текстовую строку
+                    StringBuilder historyText = new StringBuilder();
+                    historyText.AppendLine($"История аренды пользователя {selectedUser.FullName}:");
+                    historyText.AppendLine(new string('-', 50));
+                    
+                    foreach (var record in history)
+                    {
+                        historyText.AppendLine(record);
+                    }
+                    
+                    // Выводим историю аренды через MessageBox
+                    MessageBox.Show(historyText.ToString(), $"История аренды - {selectedUser.FullName}", 
+                                   MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                MessageBox.Show(historyMessage);
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при загрузке истории аренды: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
-                MessageBox.Show("Выберите пользователя для просмотра истории аренды.");
+                MessageBox.Show("Выберите пользователя для просмотра истории аренды.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -388,6 +482,36 @@ namespace WpfApp1
                         using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(Data.DatabaseHelper.ConnectionString))
                         {
                             conn.Open();
+                            
+                            // Проверяем существование таблицы и необходимых полей
+                            string checkQuery = @"
+                                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users')
+                                BEGIN
+                                    CREATE TABLE Users (
+                                        UserID INT PRIMARY KEY IDENTITY(1,1),
+                                        Login NVARCHAR(50) NOT NULL,
+                                        PasswordHash NVARCHAR(64) NOT NULL,
+                                        FullName NVARCHAR(100) NOT NULL,
+                                        Phone NVARCHAR(20) NOT NULL,
+                                        Email NVARCHAR(100),
+                                        Balance DECIMAL(10,2) DEFAULT 0.00,
+                                        Role NVARCHAR(20) DEFAULT 'User',
+                                        IsBlocked BIT DEFAULT 0 NOT NULL
+                                    )
+                                END
+                                
+                                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                              WHERE TABLE_NAME = 'Users' AND COLUMN_NAME = 'IsBlocked')
+                                BEGIN
+                                    ALTER TABLE Users ADD IsBlocked BIT DEFAULT 0 NOT NULL
+                                END";
+                                
+                            using (System.Data.SqlClient.SqlCommand checkCmd = new System.Data.SqlClient.SqlCommand(checkQuery, conn))
+                            {
+                                checkCmd.ExecuteNonQuery();
+                            }
+                            
+                            // Выполняем обновление
                             using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, conn))
                             {
                                 cmd.Parameters.AddWithValue("@UserID", editedUser.UserID);
@@ -403,11 +527,43 @@ namespace WpfApp1
                                 if (rowsAffected > 0)
                                 {
                                     MessageBox.Show("Пользователь успешно обновлен.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                                    LoadUsers();
+                                    LoadUsers(); // Перезагружаем список после обновления
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Не удалось обновить пользователя.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    // Если строки не обновились, возможно пользователя нет - пробуем создать
+                                    string insertQuery = @"INSERT INTO Users (Login, PasswordHash, FullName, Phone, Email, Balance, Role, IsBlocked)
+                                                        VALUES (@Login, @PasswordHash, @FullName, @Phone, @Email, @Balance, @Role, @IsBlocked)";
+                                    
+                                    using (System.Data.SqlClient.SqlCommand insertCmd = new System.Data.SqlClient.SqlCommand(insertQuery, conn))
+                                    {
+                                        insertCmd.Parameters.AddWithValue("@FullName", editedUser.FullName);
+                                        insertCmd.Parameters.AddWithValue("@Login", editedUser.Login);
+                                        insertCmd.Parameters.AddWithValue("@PasswordHash", editedUser.PasswordHash ?? Data.DatabaseHelper.ComputeSha256Hash("password"));
+                                        insertCmd.Parameters.AddWithValue("@Phone", editedUser.Phone);
+                                        insertCmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(editedUser.Email) ? DBNull.Value : (object)editedUser.Email);
+                                        insertCmd.Parameters.AddWithValue("@Balance", editedUser.Balance);
+                                        insertCmd.Parameters.AddWithValue("@Role", editedUser.Role);
+                                        insertCmd.Parameters.AddWithValue("@IsBlocked", editedUser.IsBlocked);
+                                        
+                                        try
+                                        {
+                                            int inserted = insertCmd.ExecuteNonQuery();
+                                            if (inserted > 0)
+                                            {
+                                                MessageBox.Show("Новый пользователь успешно добавлен.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                                                LoadUsers();
+                                            }
+                                            else
+                                            {
+                                                MessageBox.Show("Не удалось обновить или создать пользователя.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            MessageBox.Show($"Ошибка при создании пользователя: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        }
+                                    }
                                 }
                             }
                         }

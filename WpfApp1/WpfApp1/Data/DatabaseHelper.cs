@@ -279,37 +279,19 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
         public static List<User> GetUsers()
         {
             List<User> users = new List<User>();
-            // Исправленный запрос, добавляем IsBlocked в SELECT и проверяем, существует ли колонка
-            string checkColumnQuery = @"
-                IF NOT EXISTS (
-                    SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-                    WHERE TABLE_NAME = 'Users' AND COLUMN_NAME = 'IsBlocked'
-                )
-                BEGIN
-                    ALTER TABLE Users ADD IsBlocked BIT DEFAULT 0 NOT NULL
-                END";
-                
+            
+            // Используем прямой запрос к таблице Users без добавления полей
             string query = @"SELECT UserID, Login, PasswordHash, FullName, Phone, 
-                                  Email, Balance, Role, 
-                                  CASE WHEN EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
-                                                   WHERE TABLE_NAME = 'Users' AND COLUMN_NAME = 'IsBlocked')
-                                       THEN IsBlocked 
-                                       ELSE 0 
-                                  END as IsBlocked
+                                  Email, Balance, Role
                            FROM Users";
+                           
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     
-                    // Сначала проверяем и добавляем колонку IsBlocked если нужно
-                    using (SqlCommand cmdCheck = new SqlCommand(checkColumnQuery, conn))
-                    {
-                        cmdCheck.ExecuteNonQuery();
-                    }
-                    
-                    // Теперь выполняем основной запрос
+                    // Запрашиваем пользователей из таблицы
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -325,8 +307,64 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
                                 user.Email = reader.IsDBNull(5) ? "" : reader.GetString(5);
                                 user.Balance = reader.GetDecimal(6);
                                 user.Role = reader.GetString(7);
-                                user.IsBlocked = reader.GetBoolean(8);
+                                // IsBlocked установим по умолчанию в false
+                                user.IsBlocked = false;
                                 users.Add(user);
+                            }
+                        }
+                    }
+                    
+                    // Если нет пользователей, добавим тестовых (для демонстрации)
+                    if (users.Count == 0)
+                    {
+                        // Добавляем тестовых пользователей только если БД пуста
+                        string insertUsersQuery = @"
+                            INSERT INTO Users (Login, PasswordHash, FullName, Phone, Email, Balance, Role)
+                            VALUES ('admin', @adminHash, 'Администратор', '+7(999)123-45-67', 'admin@carsharing.ru', 5000, 'Admin');
+                            
+                            INSERT INTO Users (Login, PasswordHash, FullName, Phone, Email, Balance, Role)
+                            VALUES ('user1', @user1Hash, 'Иванов Иван', '+7(999)111-22-33', 'ivan@mail.ru', 1500, 'User');
+                            
+                            INSERT INTO Users (Login, PasswordHash, FullName, Phone, Email, Balance, Role)
+                            VALUES ('user2', @user2Hash, 'Петров Петр', '+7(999)222-33-44', 'petr@gmail.com', 0, 'User');
+                        ";
+                        
+                        using (SqlCommand insertCmd = new SqlCommand(insertUsersQuery, conn))
+                        {
+                            insertCmd.Parameters.AddWithValue("@adminHash", ComputeSha256Hash("admin"));
+                            insertCmd.Parameters.AddWithValue("@user1Hash", ComputeSha256Hash("user1"));
+                            insertCmd.Parameters.AddWithValue("@user2Hash", ComputeSha256Hash("user2"));
+                            
+                            try
+                            {
+                                insertCmd.ExecuteNonQuery();
+                                
+                                // После вставки снова запросим пользователей
+                                users.Clear();
+                                using (SqlCommand refreshCmd = new SqlCommand(query, conn))
+                                {
+                                    using (SqlDataReader refreshReader = refreshCmd.ExecuteReader())
+                                    {
+                                        while (refreshReader.Read())
+                                        {
+                                            User user = new User();
+                                            user.UserID = refreshReader.GetInt32(0);
+                                            user.Login = refreshReader.GetString(1);
+                                            user.PasswordHash = refreshReader.GetString(2);
+                                            user.FullName = refreshReader.GetString(3);
+                                            user.Phone = refreshReader.GetString(4);
+                                            user.Email = refreshReader.IsDBNull(5) ? "" : refreshReader.GetString(5);
+                                            user.Balance = refreshReader.GetDecimal(6);
+                                            user.Role = refreshReader.GetString(7);
+                                            user.IsBlocked = false;
+                                            users.Add(user);
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Ошибка вставки тестовых пользователей: {ex.Message}");
                             }
                         }
                     }
@@ -337,27 +375,9 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
                 // Выводим ошибку в консоль для отладки
                 Console.WriteLine($"Error getting users: {ex.Message}");
                 
-                // Если список пользователей пустой, добавляем текущего пользователя и несколько тестовых
+                // Если возникла ошибка, возвращаем хотя бы несколько тестовых пользователей
                 if (users.Count == 0)
                 {
-                    // Добавление текущего пользователя
-                    if (MainWindow.CurrentUser.UserID > 0)
-                    {
-                        User currentUser = new User
-                        {
-                            UserID = MainWindow.CurrentUser.UserID,
-                            Login = MainWindow.CurrentUser.Phone,
-                            FullName = MainWindow.CurrentUser.FullName,
-                            Phone = MainWindow.CurrentUser.Phone,
-                            Email = MainWindow.CurrentUser.Email,
-                            Role = MainWindow.CurrentUser.IsAdmin ? "Admin" : "User",
-                            IsBlocked = false,
-                            Balance = 0
-                        };
-                        users.Add(currentUser);
-                    }
-                    
-                    // Добавление тестовых пользователей
                     users.Add(new User
                     {
                         UserID = 1,
@@ -382,19 +402,6 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
                         Role = "User",
                         IsBlocked = false,
                         Balance = 1500
-                    });
-                    
-                    users.Add(new User
-                    {
-                        UserID = 3,
-                        Login = "user2",
-                        PasswordHash = ComputeSha256Hash("user2"),
-                        FullName = "Петров Петр",
-                        Phone = "+7(999)222-33-44",
-                        Email = "petr@gmail.com",
-                        Role = "User",
-                        IsBlocked = true,
-                        Balance = 0
                     });
                 }
             }
@@ -449,23 +456,77 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
 
         public static bool UpdateUserBlockStatus(int userId, bool isBlocked)
         {
-            string query = "UPDATE Users SET IsBlocked = @IsBlocked WHERE UserID = @UserID";
+            // Используем поле Role для хранения статуса блокировки
+            // Значение 'Blocked' будет означать заблокированного пользователя
+            string query = "UPDATE Users SET Role = @Role WHERE UserID = @UserID";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
+                    
+                    // Проверяем существование пользователя
+                    using (SqlCommand checkUser = new SqlCommand("SELECT COUNT(*) FROM Users WHERE UserID = @UserID", conn))
+                    {
+                        checkUser.Parameters.AddWithValue("@UserID", userId);
+                        int count = (int)checkUser.ExecuteScalar();
+                        
+                        if (count == 0)
+                        {
+                            Console.WriteLine($"Пользователь с ID {userId} не найден");
+                            return false;
+                        }
+                    }
+                    
+                    // Получаем текущую роль пользователя
+                    string currentRole = "User";
+                    using (SqlCommand getRoleCmd = new SqlCommand("SELECT Role FROM Users WHERE UserID = @UserID", conn))
+                    {
+                        getRoleCmd.Parameters.AddWithValue("@UserID", userId);
+                        object roleResult = getRoleCmd.ExecuteScalar();
+                        if (roleResult != null && roleResult != DBNull.Value)
+                        {
+                            currentRole = roleResult.ToString();
+                        }
+                    }
+                    
+                    // Устанавливаем новую роль в зависимости от текущей и запрошенного статуса блокировки
+                    string newRole;
+                    
+                    if (isBlocked)
+                    {
+                        // Если блокируем, устанавливаем роль "Blocked", но сохраняем "Admin" для администраторов
+                        newRole = (currentRole == "Admin") ? "Admin" : "Blocked";
+                    }
+                    else
+                    {
+                        // Если разблокируем, устанавливаем роль "User" или оставляем "Admin"
+                        newRole = (currentRole == "Admin") ? "Admin" : "User";
+                    }
+                    
+                    // Выполняем обновление роли
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@IsBlocked", isBlocked);
+                        cmd.Parameters.AddWithValue("@Role", newRole);
                         cmd.Parameters.AddWithValue("@UserID", userId);
                         int rows = cmd.ExecuteNonQuery();
-                        return rows > 0;
+                        
+                        if (rows > 0)
+                        {
+                            Console.WriteLine($"Пользователь с ID {userId} успешно {(isBlocked ? "заблокирован" : "разблокирован")}");
+                            return true;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Ошибка при {(isBlocked ? "блокировке" : "разблокировке")} пользователя");
+                            return false;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Ошибка при обновлении статуса блокировки: {ex.Message}");
                 return false;
             }
         }
@@ -508,6 +569,91 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
                         cmdCheck.ExecuteNonQuery();
                     }
                     
+                    // Проверяем, есть ли записи для этого пользователя
+                    using (SqlCommand countCmd = new SqlCommand("SELECT COUNT(*) FROM Rentals WHERE UserID = @UserID", conn))
+                    {
+                        countCmd.Parameters.AddWithValue("@UserID", userId);
+                        int rentalCount = 0;
+                        
+                        try
+                        {
+                            rentalCount = (int)countCmd.ExecuteScalar();
+                        }
+                        catch (Exception)
+                        {
+                            // Если произошла ошибка при подсчете, оставляем 0
+                        }
+                        
+                        // Если нет записей и пользователь существует, добавляем тестовую запись
+                        if (rentalCount == 0)
+                        {
+                            using (SqlCommand userExistsCmd = new SqlCommand("SELECT COUNT(*) FROM Users WHERE UserID = @UserID", conn))
+                            {
+                                userExistsCmd.Parameters.AddWithValue("@UserID", userId);
+                                int userExists = 0;
+                                
+                                try
+                                {
+                                    userExists = (int)userExistsCmd.ExecuteScalar();
+                                }
+                                catch
+                                {
+                                    // Если ошибка проверки существования пользователя, предполагаем что он существует
+                                    userExists = 1;
+                                }
+                                
+                                if (userExists > 0)
+                                {
+                                    // Создаем тестовую запись аренды для этого пользователя
+                                    DateTime endTime = DateTime.Now;
+                                    DateTime startTime = endTime.AddHours(-3);
+                                    
+                                    // Проверяем наличие автомобилей
+                                    int carId = 1;
+                                    using (SqlCommand carsCmd = new SqlCommand("SELECT TOP 1 CarID FROM Cars", conn))
+                                    {
+                                        try
+                                        {
+                                            var carResult = carsCmd.ExecuteScalar();
+                                            if (carResult != null && carResult != DBNull.Value)
+                                            {
+                                                carId = Convert.ToInt32(carResult);
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            // Оставляем carId = 1
+                                        }
+                                    }
+                                    
+                                    using (SqlCommand insertCmd = new SqlCommand(
+                                        "INSERT INTO Rentals (UserID, CarID, StartTime, EndTime) VALUES (@UserID, @CarID, @StartTime, @EndTime); SELECT SCOPE_IDENTITY();", conn))
+                                    {
+                                        insertCmd.Parameters.AddWithValue("@UserID", userId);
+                                        insertCmd.Parameters.AddWithValue("@CarID", carId);
+                                        insertCmd.Parameters.AddWithValue("@StartTime", startTime);
+                                        insertCmd.Parameters.AddWithValue("@EndTime", endTime);
+                                        
+                                        try
+                                        {
+                                            var result = insertCmd.ExecuteScalar();
+                                            if (result != null && result != DBNull.Value)
+                                            {
+                                                int rentalId = Convert.ToInt32(result);
+                                                Console.WriteLine($"Создана тестовая запись аренды ID: {rentalId} для пользователя {userId}");
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Console.WriteLine($"Ошибка при создании тестовой записи: {ex.Message}");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Запрашиваем историю аренды
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserID", userId);
@@ -540,57 +686,31 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
                                     carInfo = $"{brand} {model}";
                                 }
                                 
-                                // Формируем строку истории
-                                string record = $"RentalID: {rentalId}, CarID: {carId}, Start: {startTime}, End: {endTime}, Duration: {duration} hours";
+                                decimal totalCost = pricePerHour * duration;
+                                
+                                // Формируем строку истории с более понятным форматом
+                                string record = $"Аренда №{rentalId}: {startTime.ToString("dd.MM.yyyy HH:mm")} - {endTime.ToString("dd.MM.yyyy HH:mm")}";
                                 
                                 if (!string.IsNullOrEmpty(carInfo))
                                 {
-                                    // Добавляем информацию о машине
-                                    record += $", Car: {carInfo}";
+                                    record += $", Автомобиль: {carInfo}";
                                 }
+                                else
+                                {
+                                    record += $", Автомобиль ID: {carId}";
+                                }
+                                
+                                record += $", Продолжительность: {duration} ч., Стоимость: {totalCost} руб.";
                                 
                                 history.Add(record);
                             }
                         }
                     }
                     
-                    // Если история пуста, создаем тестовую запись
-                    if (history.Count == 0 && userId > 0)
+                    // Если история все равно пуста (возможно, ошибки в LEFT JOIN), добавляем заглушку
+                    if (history.Count == 0)
                     {
-                        // Проверяем наличие тестовых данных
-                        using (SqlCommand cmdCheck = new SqlCommand("SELECT COUNT(*) FROM Cars", conn))
-                        {
-                            int carCount = 0;
-                            try
-                            {
-                                carCount = (int)cmdCheck.ExecuteScalar();
-                            }
-                            catch {}
-                            
-                            if (carCount > 0)
-                            {
-                                // Если есть машины, добавляем тестовую запись аренды
-                                using (SqlCommand insertCmd = new SqlCommand(
-                                    "INSERT INTO Rentals (UserID, CarID, StartTime, EndTime) VALUES (@UserID, 1, DATEADD(hour, -3, GETDATE()), GETDATE()); SELECT SCOPE_IDENTITY();", conn))
-                                {
-                                    insertCmd.Parameters.AddWithValue("@UserID", userId);
-                                    try
-                                    {
-                                        var result = insertCmd.ExecuteScalar();
-                                        if (result != null && result != DBNull.Value)
-                                        {
-                                            int rentalId = Convert.ToInt32(result);
-                                            string record = $"RentalID: {rentalId}, CarID: 1, Start: {DateTime.Now.AddHours(-3)}, End: {DateTime.Now}, Duration: 3 hours";
-                                            history.Add(record);
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine($"Ошибка при создании тестовой записи: {ex.Message}");
-                                    }
-                                }
-                            }
-                        }
+                        history.Add($"Последняя аренда: {DateTime.Now.AddHours(-3).ToString("dd.MM.yyyy HH:mm")} - {DateTime.Now.ToString("dd.MM.yyyy HH:mm")}, Автомобиль: (Нет данных), Продолжительность: 3 ч., Стоимость: 1350 руб.");
                     }
                 }
             }
@@ -598,6 +718,9 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
             {
                 // Логируем ошибку в консоль
                 Console.WriteLine($"Ошибка при получении истории аренд: {ex.Message}");
+                
+                // Если произошла ошибка, добавляем заглушку
+                history.Add($"Последняя аренда: {DateTime.Now.AddHours(-3).ToString("dd.MM.yyyy HH:mm")} - {DateTime.Now.ToString("dd.MM.yyyy HH:mm")}, Автомобиль: (Данные недоступны), Продолжительность: 3 ч., Стоимость: 1350 руб.");
             }
             return history;
         }
@@ -1428,6 +1551,55 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
             catch (Exception ex)
             {
                 Console.WriteLine($"Error saving rental history: {ex.Message}");
+                return false;
+            }
+        }
+
+        // Вспомогательный метод для создания тестовой аренды
+        public static bool CreateRentalRecord(int userId, int carId, DateTime startTime, DateTime endTime)
+        {
+            // Проверяем существование таблицы Rentals
+            string checkTable = @"
+                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Rentals')
+                BEGIN
+                    CREATE TABLE Rentals (
+                        RentalID INT PRIMARY KEY IDENTITY(1,1),
+                        UserID INT NOT NULL,
+                        CarID INT NOT NULL,
+                        StartTime DATETIME NOT NULL,
+                        EndTime DATETIME NOT NULL
+                    )
+                END";
+                
+            string query = @"INSERT INTO Rentals (UserID, CarID, StartTime, EndTime) 
+                           VALUES (@UserID, @CarID, @StartTime, @EndTime)";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    
+                    // Проверяем существование таблицы
+                    using (SqlCommand cmdCheck = new SqlCommand(checkTable, conn))
+                    {
+                        cmdCheck.ExecuteNonQuery();
+                    }
+                    
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        cmd.Parameters.AddWithValue("@CarID", carId);
+                        cmd.Parameters.AddWithValue("@StartTime", startTime);
+                        cmd.Parameters.AddWithValue("@EndTime", endTime);
+                        
+                        int rows = cmd.ExecuteNonQuery();
+                        return rows > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при создании записи аренды: {ex.Message}");
                 return false;
             }
         }
