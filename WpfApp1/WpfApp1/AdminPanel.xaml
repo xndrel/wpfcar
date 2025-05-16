@@ -1,0 +1,178 @@
+<Window x:Class="WpfApp1.AdminPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WpfApp1"
+        xmlns:converters="clr-namespace:WpfApp1.Converters"
+        Title="Административная Панель" Height="600" Width="800">
+    <Window.Resources>
+        <converters:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
+        <converters:BoolToAvailabilityConverter x:Key="BoolToAvailabilityConverter"/>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TabControl Grid.Row="0">
+            <!-- Вкладка Пользователи -->
+            <TabItem Header="Пользователи">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <ListView x:Name="UsersListView" Grid.Row="0" Margin="0,0,0,10">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="ID" Width="40" DisplayMemberBinding="{Binding UserID}" />
+                                <GridViewColumn Header="Полное имя" Width="150" DisplayMemberBinding="{Binding FullName}" />
+                                <GridViewColumn Header="Логин" Width="100" DisplayMemberBinding="{Binding Login}" />
+                                <GridViewColumn Header="Телефон" Width="120" DisplayMemberBinding="{Binding Phone}" />
+                                <GridViewColumn Header="Email" Width="150" DisplayMemberBinding="{Binding Email}" />
+                                <GridViewColumn Header="Баланс" Width="80" DisplayMemberBinding="{Binding Balance}" />
+                                <GridViewColumn Header="Роль" Width="80" DisplayMemberBinding="{Binding Role}" />
+                                <GridViewColumn Header="Статус" Width="80">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsBlocked, Converter={StaticResource BoolToStatusConverter}}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <Button Content="Блокировать" Click="BlockUser_Click" Margin="5" Padding="10,5"/>
+                        <Button Content="Разблокировать" Click="UnblockUser_Click" Margin="5" Padding="10,5"/>
+                        <Button Content="История аренды" Click="ShowRentalHistory_Click" Margin="5" Padding="10,5"/>
+                        <Button Content="Редактировать" Click="EditUser_Click" Margin="5" Padding="10,5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка Автопарк -->
+            <TabItem Header="Автопарк">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <ListView x:Name="CarsListView" Grid.Row="0" Margin="0,0,0,10">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="ID" Width="40" DisplayMemberBinding="{Binding CarID}" />
+                                <GridViewColumn Header="Марка" Width="120" DisplayMemberBinding="{Binding Brand}" />
+                                <GridViewColumn Header="Модель" Width="120" DisplayMemberBinding="{Binding Model}" />
+                                <GridViewColumn Header="Год" Width="60" DisplayMemberBinding="{Binding Year}" />
+                                <GridViewColumn Header="Цвет" Width="80" DisplayMemberBinding="{Binding Color}" />
+                                <GridViewColumn Header="Гос. номер" Width="100" DisplayMemberBinding="{Binding LicensePlate}" />
+                                <GridViewColumn Header="Цена/час" Width="80" DisplayMemberBinding="{Binding PricePerHour}" />
+                                <GridViewColumn Header="Доступность" Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsAvailable, Converter={StaticResource BoolToAvailabilityConverter}}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <Button Content="Добавить" Click="AddCar_Click" Margin="5" Padding="10,5"/>
+                        <Button Content="Редактировать" Click="EditCar_Click" Margin="5" Padding="10,5"/>
+                        <Button Content="Удалить" Click="DeleteCar_Click" Margin="5" Padding="10,5"/>
+                        <Button Content="Тестовая аренда" Click="TestRental_Click" Margin="5" Padding="10,5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка Поддержка -->
+            <TabItem Header="Поддержка">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <ListView x:Name="ChatsListView" Grid.Row="0" Margin="0,0,0,10">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="ID чата" Width="100" />
+                                <GridViewColumn Header="Пользователь" Width="150" />
+                                <GridViewColumn Header="Дата создания" Width="150" />
+                                <GridViewColumn Header="Статус" Width="100" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <Button Content="Открыть чат" Click="OpenChat_Click" Margin="5" Padding="10,5"/>
+                        <Button Content="Закрыть чат" Click="CloseChat_Click" Margin="5" Padding="10,5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка Карта автомобилей -->
+            <TabItem Header="Карта автомобилей">
+                <Grid>
+                    <!-- Карта города с автомобилями -->
+                    <Image Source="Photo/tyumen.jpg" Stretch="Fill" />
+                    
+                    <!-- Канвас для маркеров автомобилей -->
+                    <Canvas Name="AdminMapCanvas" Background="Transparent">
+                        <!-- Маркеры будут добавлены программно -->
+                    </Canvas>
+                    
+                    <!-- Панель управления картой -->
+                    <Border Background="#80000000" Height="50" VerticalAlignment="Top">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,0,0">
+                                <TextBlock Text="Фильтр по типу кузова:" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <ComboBox Name="AdminMapFilterComboBox" Width="120" Margin="5,0" SelectionChanged="AdminMapFilterComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Все" IsSelected="True"/>
+                                    <ComboBoxItem Content="Седан"/>
+                                    <ComboBoxItem Content="Внедорожник"/>
+                                    <ComboBoxItem Content="Кабриолет"/>
+                                </ComboBox>
+                                <Button Content="Обновить карту" Click="RefreshMap_Click" 
+                                    Margin="15,0" Padding="10,5" Background="#FF007ACC" Foreground="White"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка Объявления -->
+            <TabItem Header="Объявления">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="Заголовок:" Margin="0,0,0,5" FontWeight="Bold"/>
+                    <TextBox Grid.Row="1" x:Name="AnnouncementTitleTextBox" Margin="0,0,0,10" Padding="5"/>
+                    
+                    <TextBlock Grid.Row="2" Text="Текст объявления:" Margin="0,0,0,5" FontWeight="Bold"/>
+                    <TextBox Grid.Row="3" x:Name="AnnouncementContentTextBox" Margin="0,0,0,10" 
+                             TextWrapping="Wrap" AcceptsReturn="True" Height="Auto" Padding="5"/>
+                    
+                    <Button Grid.Row="4" Content="Опубликовать" Click="PublishAnnouncement_Click" 
+                            Margin="5" Padding="10,5" HorizontalAlignment="Right" Width="120"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
+        <!-- Кнопка выхода из админ-панели -->
+        <Button Grid.Row="1" Content="Выйти в главное меню" HorizontalAlignment="Right" 
+                Click="LogoutButton_Click" Margin="10,10,10,10" Padding="10,5" Background="#FFC00000" Foreground="White" />
+    </Grid>
+</Window> 

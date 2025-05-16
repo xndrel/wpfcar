@@ -1,0 +1,16 @@
+<Window x:Class="WpfApp1.RentalControlWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Управление арендой" Height="400" Width="400">
+    <Grid Margin="10">
+        <StackPanel>
+            <TextBlock x:Name="StatusTextBlock" Text="Статус автомобиля: Закрыт" FontSize="18" Margin="0,0,0,20"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="OpenButton" Content="Открыть автомобиль" Click="OpenButton_Click" Margin="5"/>
+                <Button x:Name="CloseButton" Content="Закрыть автомобиль" Click="CloseButton_Click" Margin="5"/>
+            </StackPanel>
+            <Button x:Name="EndRentalButton" Content="Завершить аренду" Click="EndRentalButton_Click" Margin="10" Height="40"/>
+            <Button x:Name="BackToMainButton" Content="Вернуться на главный экран" Click="BackToMainButton_Click" Margin="10" Height="40"/>
+        </StackPanel>
+    </Grid>
+</Window> 

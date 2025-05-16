@@ -1,0 +1,444 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\cardetailswindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\cardetailswindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|c:\\users\\yadib\\downloads\\0\\wpfapp1\\wpfapp1\\cardetailswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\cardetailswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\profilewindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\profilewindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\adminpanel.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\adminpanel.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\addcarwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\addcarwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\mainscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\mainscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\paymentwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\paymentwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\edituserwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\edituserwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\rentalcontrolwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\rentalcontrolwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\editcarwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\editcarwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\edituserwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\edituserwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\data\\databasehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\data\\databasehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\adminpanel.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\adminpanel.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\rentalcontrolwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\rentalcontrolwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\supportchatwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\supportchatwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\supportchatwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\supportchatwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\paymentwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\paymentwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\packages.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\packages.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\mainscreen.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\mainscreen.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\car.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\car.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\wpfapp1\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{52890CAD-D278-491F-881C-A2C4AC5A17BD}|WpfApp1\\WpfApp1.csproj|solutionrelative:wpfapp1\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|c:\\users\\yadib\\downloads\\0\\wpfapp1\\wpfapp1\\converters\\booltostatusconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:wpfapp1\\converters\\booltostatusconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|c:\\users\\yadib\\downloads\\0\\wpfapp1\\wpfapp1\\converters\\booltoavailabilityconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:wpfapp1\\converters\\booltoavailabilityconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "BoolToAvailabilityConverter.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\Converters\\BoolToAvailabilityConverter.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\Converters\\BoolToAvailabilityConverter.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\Converters\\BoolToAvailabilityConverter.cs",
+              "RelativeToolTip": "WpfApp1\\Converters\\BoolToAvailabilityConverter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T03:34:06.833Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CarDetailsWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\CarDetailsWindow.xaml.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\CarDetailsWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\CarDetailsWindow.xaml.cs",
+              "RelativeToolTip": "WpfApp1\\CarDetailsWindow.xaml.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAQwCIAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T00:15:48.028Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "BoolToStatusConverter.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\Converters\\BoolToStatusConverter.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\Converters\\BoolToStatusConverter.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\Converters\\BoolToStatusConverter.cs",
+              "RelativeToolTip": "WpfApp1\\Converters\\BoolToStatusConverter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T03:33:31.15Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\MainWindow.xaml",
+              "RelativeToolTip": "WpfApp1\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-15T23:04:06.478Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CarDetailsWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\CarDetailsWindow.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\CarDetailsWindow.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\CarDetailsWindow.xaml",
+              "RelativeToolTip": "WpfApp1\\CarDetailsWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T00:15:43.163Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AdminPanel.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\AdminPanel.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\AdminPanel.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\AdminPanel.xaml",
+              "RelativeToolTip": "WpfApp1\\AdminPanel.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T00:46:56.871Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProfileWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\ProfileWindow.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\ProfileWindow.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\ProfileWindow.xaml",
+              "RelativeToolTip": "WpfApp1\\ProfileWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T02:47:55.512Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AddCarWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\AddCarWindow.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\AddCarWindow.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\AddCarWindow.xaml",
+              "RelativeToolTip": "WpfApp1\\AddCarWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T01:10:30.007Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "SupportChatWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\SupportChatWindow.xaml.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\SupportChatWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\SupportChatWindow.xaml.cs",
+              "RelativeToolTip": "WpfApp1\\SupportChatWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T00:48:31.755Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "SupportChatWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\SupportChatWindow.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\SupportChatWindow.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\SupportChatWindow.xaml",
+              "RelativeToolTip": "WpfApp1\\SupportChatWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T00:46:52.653Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "EditCarWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\EditCarWindow.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\EditCarWindow.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\EditCarWindow.xaml",
+              "RelativeToolTip": "WpfApp1\\EditCarWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T01:10:43Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "EditUserWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\EditUserWindow.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\EditUserWindow.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\EditUserWindow.xaml",
+              "RelativeToolTip": "WpfApp1\\EditUserWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T01:10:53.955Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MainScreen.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\MainScreen.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\MainScreen.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\MainScreen.xaml",
+              "RelativeToolTip": "WpfApp1\\MainScreen.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T00:00:25.368Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "RentalControlWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\RentalControlWindow.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\RentalControlWindow.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\RentalControlWindow.xaml",
+              "RelativeToolTip": "WpfApp1\\RentalControlWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T00:39:28.472Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PaymentWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\PaymentWindow.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\PaymentWindow.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\PaymentWindow.xaml",
+              "RelativeToolTip": "WpfApp1\\PaymentWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-16T00:26:38.289Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "EditUserWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\EditUserWindow.xaml.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\EditUserWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\EditUserWindow.xaml.cs",
+              "RelativeToolTip": "WpfApp1\\EditUserWindow.xaml.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T01:15:40.943Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "DatabaseHelper.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\Data\\DatabaseHelper.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\Data\\DatabaseHelper.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\Data\\DatabaseHelper.cs",
+              "RelativeToolTip": "WpfApp1\\Data\\DatabaseHelper.cs",
+              "ViewState": "AgIAAAgBAAAAAAAAAAAAAFgCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-15T23:47:59.609Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "AdminPanel.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\AdminPanel.xaml.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\AdminPanel.xaml.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\AdminPanel.xaml.cs",
+              "RelativeToolTip": "WpfApp1\\AdminPanel.xaml.cs",
+              "ViewState": "AgIAAAwBAAAAAAAAAAAmwDcBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T00:46:59.612Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "RentalControlWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\RentalControlWindow.xaml.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\RentalControlWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\RentalControlWindow.xaml.cs",
+              "RelativeToolTip": "WpfApp1\\RentalControlWindow.xaml.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwCAAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T00:46:51.948Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "PaymentWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\PaymentWindow.xaml.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\PaymentWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\PaymentWindow.xaml.cs",
+              "RelativeToolTip": "WpfApp1\\PaymentWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T00:26:43.15Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "packages.config",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\packages.config",
+              "RelativeDocumentMoniker": "WpfApp1\\packages.config",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\packages.config",
+              "RelativeToolTip": "WpfApp1\\packages.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-05-16T00:26:33.248Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\MainWindow.xaml.cs",
+              "RelativeToolTip": "WpfApp1\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAwwBMAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-15T23:04:05.356Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "MainScreen.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\MainScreen.xaml.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\MainScreen.xaml.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\MainScreen.xaml.cs",
+              "RelativeToolTip": "WpfApp1\\MainScreen.xaml.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAmwDcAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T00:00:43.769Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Car.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\Car.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\Car.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\Car.cs",
+              "RelativeToolTip": "WpfApp1\\Car.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T00:46:43.332Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\App.xaml.cs",
+              "RelativeDocumentMoniker": "WpfApp1\\App.xaml.cs",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\App.xaml.cs",
+              "RelativeToolTip": "WpfApp1\\App.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-15T23:36:22.094Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\App.xaml",
+              "RelativeDocumentMoniker": "WpfApp1\\App.xaml",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\App.xaml",
+              "RelativeToolTip": "WpfApp1\\App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-15T23:23:49.67Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "App.config",
+              "DocumentMoniker": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\App.config",
+              "RelativeDocumentMoniker": "WpfApp1\\App.config",
+              "ToolTip": "C:\\Users\\yadib\\Downloads\\0\\WpfApp1\\WpfApp1\\App.config",
+              "RelativeToolTip": "WpfApp1\\App.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-05-15T23:21:16.548Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

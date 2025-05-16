@@ -1,0 +1,84 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Регистрация / Авторизация" Height="450" Width="450">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Главная панель с регистрацией и авторизацией -->
+        <TabControl Grid.Row="0">
+            <TabItem Header="Регистрация">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Регистрация" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Width="100" Text="ФИО:" VerticalAlignment="Center"/>
+                            <TextBox x:Name="FullNameTextBox" Width="200"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Width="100" Text="Телефон:" VerticalAlignment="Center"/>
+                            <TextBox x:Name="PhoneTextBox" Width="200"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Width="100" Text="Email:" VerticalAlignment="Center"/>
+                            <TextBox x:Name="EmailTextBox" Width="200"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Width="100" Text="Пароль:" VerticalAlignment="Center"/>
+                            <PasswordBox x:Name="PasswordBox" Width="200"/>
+                        </StackPanel>
+                        <Button x:Name="RegisterButton" Content="Регистрация" Click="RegisterButton_Click" Width="150"/>
+                        <StackPanel x:Name="SMSPanel" Visibility="Collapsed" Margin="10">
+                            <TextBlock Text="Введите код из SMS:"/>
+                            <TextBox x:Name="SMSCodeTextBox" Width="150"/>
+                            <Button Content="Подтвердить" Click="ConfirmSMSButton_Click" Width="150"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Авторизация">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Авторизация" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Width="100" Text="Телефон:" VerticalAlignment="Center"/>
+                            <TextBox x:Name="LoginPhoneTextBox" Width="200"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Width="100" Text="Пароль:" VerticalAlignment="Center"/>
+                            <PasswordBox x:Name="LoginPasswordBox" Width="200"/>
+                        </StackPanel>
+                        <Button x:Name="LoginButton" Content="Войти" Click="LoginButton_Click" Width="150"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+        
+        <!-- Кнопки быстрого доступа к админ-панели и поддержке -->
+        <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="0,1,0,0" Margin="0,10,0,0" Padding="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="AdminLoginButton" Content="Войти как администратор" 
+                        Click="AdminLoginButton_Click" Width="180" Margin="10,0" Background="#FF5A1D80"/>
+                <Button x:Name="SupportLoginButton" Content="Войти как сотрудник поддержки" 
+                        Click="SupportLoginButton_Click" Width="220" Margin="10,0" Background="#FF259B24"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window> 

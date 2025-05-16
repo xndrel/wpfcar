@@ -1,0 +1,122 @@
+﻿<Window x:Class="WpfApp1.AddCarWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="Добавить автомобиль" Height="500" Width="400">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Добавление нового автомобиля" 
+                   FontSize="18" FontWeight="Bold" 
+                   HorizontalAlignment="Center" 
+                   Margin="0,0,0,20"/>
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <GroupBox Header="Основная информация">
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Марка:" Grid.Row="0" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="BrandTextBox" Grid.Row="0" Grid.Column="1" Margin="0,5" Padding="3"/>
+
+                        <TextBlock Text="Модель:" Grid.Row="1" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="ModelTextBox" Grid.Row="1" Grid.Column="1" Margin="0,5" Padding="3"/>
+
+                        <TextBlock Text="Год выпуска:" Grid.Row="2" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="YearTextBox" Grid.Row="2" Grid.Column="1" Margin="0,5" Padding="3"/>
+
+                        <TextBlock Text="Тип кузова:" Grid.Row="3" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="TypeComboBox" Grid.Row="3" Grid.Column="1" Margin="0,5" Padding="3">
+                            <ComboBoxItem Content="Седан"/>
+                            <ComboBoxItem Content="Хэтчбек"/>
+                            <ComboBoxItem Content="Универсал"/>
+                            <ComboBoxItem Content="Внедорожник"/>
+                            <ComboBoxItem Content="Кабриолет"/>
+                        </ComboBox>
+
+                        <TextBlock Text="Объем двигателя:" Grid.Row="4" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="EngineVolumeTextBox" Grid.Row="4" Grid.Column="1" Margin="0,5" Padding="3"/>
+
+                        <TextBlock Text="Тип топлива:" Grid.Row="5" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="FuelTypeComboBox" Grid.Row="5" Grid.Column="1" Margin="0,5" Padding="3">
+                            <ComboBoxItem Content="Бензин"/>
+                            <ComboBoxItem Content="Дизель"/>
+                            <ComboBoxItem Content="Электро"/>
+                            <ComboBoxItem Content="Гибрид"/>
+                        </ComboBox>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="Информация об автомобиле" Margin="0,10,0,0">
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Гос. номер:" Grid.Row="0" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="LicensePlateTextBox" Grid.Row="0" Grid.Column="1" Margin="0,5" Padding="3"/>
+
+                        <TextBlock Text="Цвет:" Grid.Row="1" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="ColorTextBox" Grid.Row="1" Grid.Column="1" Margin="0,5" Padding="3"/>
+
+                        <TextBlock Text="Широта:" Grid.Row="2" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="LatitudeTextBox" Grid.Row="2" Grid.Column="1" Margin="0,5" Padding="3"/>
+
+                        <TextBlock Text="Долгота:" Grid.Row="3" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="LongitudeTextBox" Grid.Row="3" Grid.Column="1" Margin="0,5" Padding="3"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="Арендная информация" Margin="0,10,0,0">
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Стоимость в час:" Grid.Row="0" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="PricePerHourTextBox" Grid.Row="0" Grid.Column="1" Margin="0,5" Padding="3"/>
+
+                        <TextBlock Text="Доступность:" Grid.Row="1" Grid.Column="0" Margin="0,5,10,5" VerticalAlignment="Center"/>
+                        <CheckBox x:Name="IsAvailableCheckBox" Grid.Row="1" Grid.Column="1" Margin="0,5" IsChecked="True" Content="Доступен для аренды"/>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Отмена" Width="80" Margin="0,0,10,0" Click="CancelButton_Click"/>
+            <Button Content="Добавить" Width="80" Click="OkButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

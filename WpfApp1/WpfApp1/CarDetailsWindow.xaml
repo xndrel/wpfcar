@@ -1,0 +1,52 @@
+<Window x:Class="WpfApp1.CarDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Детали автомобиля" Height="400" Width="450">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="Детали автомобиля" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+        
+        <!-- Содержимое -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Картинка -->
+            <Border Grid.Column="0" BorderBrush="LightGray" BorderThickness="1" Margin="0,0,10,0">
+                <Image x:Name="CarImage" Stretch="Uniform" Margin="10"/>
+            </Border>
+            
+            <!-- Информация -->
+            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                <TextBlock x:Name="BrandTextBlock" Text="Марка: Toyota" FontWeight="Bold" Margin="0,0,0,10"/>
+                <TextBlock x:Name="ModelTextBlock" Text="Модель: Camry" Margin="0,0,0,10"/>
+                <TextBlock x:Name="YearTextBlock" Text="Год: 2022" Margin="0,0,0,10"/>
+                <TextBlock x:Name="PriceTextBlock" Text="Цена аренды: 450 руб/час" Margin="0,0,0,20"/>
+                
+                <!-- Срок аренды -->
+                <TextBlock Text="Срок аренды (часов):" FontWeight="Bold" Margin="0,0,0,5"/>
+                <ComboBox x:Name="RentalDurationComboBox" Margin="0,0,0,20">
+                    <ComboBoxItem Content="1" IsSelected="True"/>
+                    <ComboBoxItem Content="2"/>
+                    <ComboBoxItem Content="3"/>
+                    <ComboBoxItem Content="4"/>
+                    <ComboBoxItem Content="5"/>
+                    <ComboBoxItem Content="6"/>
+                    <ComboBoxItem Content="12"/>
+                    <ComboBoxItem Content="24"/>
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Кнопка -->
+        <Button Grid.Row="2" Content="Оформить аренду" Width="120" Height="30" HorizontalAlignment="Right" Margin="0,10,0,0" Click="ConfirmRentalButton_Click"/>
+    </Grid>
+</Window> 
