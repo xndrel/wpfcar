@@ -1,6 +1,7 @@
 <Window x:Class="WpfApp1.ProfileWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         Title="Профиль пользователя" Height="450" Width="650">
     <Grid>
         <Grid.RowDefinitions>
@@ -70,6 +71,12 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+        </Grid>
+        
+        <!-- График и кнопка экспорта PDF -->
+        <Grid Row="1" Margin="0,10,0,0">
+            <lvc:CartesianChart x:Name="UserStatsChart" Height="200"/>
+            <Button x:Name="ExportUserPdfButton" Content="Выгрузить PDF отчёт" Width="200" Height="30" HorizontalAlignment="Right" Margin="0,10,0,0"/>
         </Grid>
         
         <!-- Кнопка закрытия -->

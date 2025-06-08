@@ -1,4 +1,6 @@
 using System.Windows;
+using System;
+using System.Data.SqlClient;
 
 namespace WpfApp1
 {
@@ -37,10 +39,59 @@ namespace WpfApp1
                 }
             }
 
-            // Имитация обработки платежа
-            MessageBox.Show("Оплата прошла успешно!");
+            // --- Новый блок: создаём аренду и платёж ---
+            try
+            {
+                int userId = MainWindow.CurrentUser.UserID;
+                DateTime startTime = DateTime.Now;
+                // Для простоты считаем, что сумма = цена за все часы, значит часы = сумма / цена за час
+                decimal pricePerHour = 450; // По умолчанию
+                int hours = 1;
+                using (var conn = new SqlConnection(Data.DatabaseHelper.ConnectionString))
+                {
+                    conn.Open();
+                    // Получаем цену за час для машины
+                    using (var cmd = new SqlCommand("SELECT PricePerHour FROM Cars WHERE CarID = @CarID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CarID", _carId);
+                        var result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            pricePerHour = Convert.ToDecimal(result);
+                        }
+                    }
+                    hours = (int)Math.Round(_amount / pricePerHour);
+                    if (hours < 1) hours = 1;
+                    DateTime endTime = startTime.AddHours(hours);
+                    // Создаём аренду
+                    int rentalId = 0;
+                    using (var cmd = new SqlCommand(@"INSERT INTO Rentals (UserID, CarID, StartTime, EndTime) VALUES (@UserID, @CarID, @StartTime, @EndTime); SELECT SCOPE_IDENTITY();", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        cmd.Parameters.AddWithValue("@CarID", _carId);
+                        cmd.Parameters.AddWithValue("@StartTime", startTime);
+                        cmd.Parameters.AddWithValue("@EndTime", endTime);
+                        var result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            rentalId = Convert.ToInt32(result);
+                        }
+                    }
+                    // Добавляем платёж
+                    if (rentalId > 0)
+                    {
+                        Data.DatabaseHelper.AddPayment(rentalId, _amount);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при создании аренды или платёжа: {ex.Message}");
+                return;
+            }
+            // --- Конец нового блока ---
 
-            // Открываем экран управления арендой
+            MessageBox.Show("Оплата прошла успешно!");
             RentalControlWindow rentalWindow = new RentalControlWindow(_carId);
             rentalWindow.Show();
             this.Close();

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WpfApp1"
         xmlns:converters="clr-namespace:WpfApp1.Converters"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         Title="Административная Панель" Height="600" Width="800">
     <Window.Resources>
         <converters:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
@@ -49,6 +50,7 @@
                         <Button Content="Разблокировать" Click="UnblockUser_Click" Margin="5" Padding="10,5"/>
                         <Button Content="История аренды" Click="ShowRentalHistory_Click" Margin="5" Padding="10,5"/>
                         <Button Content="Редактировать" Click="EditUser_Click" Margin="5" Padding="10,5"/>
+                        <Button Content="Удалить пользователя" Click="DeleteUserButton_Click" Margin="5" Padding="10,5"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -113,6 +115,7 @@
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
                         <Button Content="Открыть чат" Click="OpenChat_Click" Margin="5" Padding="10,5"/>
                         <Button Content="Закрыть чат" Click="CloseChat_Click" Margin="5" Padding="10,5"/>
+                        <Button Content="Удалить чат" Click="DeleteChatButton_Click" Margin="5" Padding="10,5"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -167,6 +170,18 @@
                     
                     <Button Grid.Row="4" Content="Опубликовать" Click="PublishAnnouncement_Click" 
                             Margin="5" Padding="10,5" HorizontalAlignment="Right" Width="120"/>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка Статистика -->
+            <TabItem Header="Статистика">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <lvc:CartesianChart x:Name="AdminStatsChart" Grid.Row="0" Margin="0,0,0,10"/>
+                    <Button x:Name="ExportAdminPdfButton" Grid.Row="1" Content="Выгрузить PDF отчёт" Width="200" Height="30" HorizontalAlignment="Right" Margin="0,10,0,0"/>
                 </Grid>
             </TabItem>
         </TabControl>

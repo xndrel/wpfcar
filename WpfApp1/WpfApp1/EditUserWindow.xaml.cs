@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfApp1.Validators;
 
 namespace WpfApp1
 {
@@ -64,11 +65,16 @@ namespace WpfApp1
             try
             {
                 // Validate input fields
-                if (string.IsNullOrWhiteSpace(FullNameTextBox.Text) || 
-                    string.IsNullOrWhiteSpace(LoginTextBox.Text) ||
-                    string.IsNullOrWhiteSpace(PhoneTextBox.Text))
+                if (string.IsNullOrWhiteSpace(FullNameTextBox.Text) || string.IsNullOrWhiteSpace(LoginTextBox.Text))
                 {
-                    MessageBox.Show("Пожалуйста, заполните все обязательные поля: Имя, Логин и Телефон", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Пожалуйста, заполните все обязательные поля: Имя и Логин", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                string phone = PhoneTextBox.Text.Trim();
+                string phoneErrorMsg;
+                if (!InputValidator.ValidatePhoneNumber(phone, out phoneErrorMsg))
+                {
+                    MessageBox.Show(phoneErrorMsg, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
                 
@@ -90,7 +96,7 @@ namespace WpfApp1
                 // Populate UserData properties
                 UserData.FullName = FullNameTextBox.Text;
                 UserData.Login = LoginTextBox.Text;
-                UserData.Phone = PhoneTextBox.Text;
+                UserData.Phone = phone;
                 UserData.Email = EmailTextBox.Text;
                 UserData.Balance = balance;
                 UserData.Role = selectedRole;

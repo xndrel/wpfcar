@@ -2,6 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using WpfApp1;
+using LiveCharts;
+using LiveCharts.Wpf;
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
+using System.Linq;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
 
 namespace WpfApp1
 {
@@ -36,6 +43,8 @@ namespace WpfApp1
             LoadUserInfo();
             LoadRentalHistory();
             LoadAnnouncements();
+            LoadUserStatsChart();
+            ExportUserPdfButton.Click += ExportUserPdfButton_Click;
         }
 
         private void LoadUserInfo()
@@ -341,6 +350,53 @@ namespace WpfApp1
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        public void LoadUserStatsChart()
+        {
+            // Получаем статистику аренд по автомобилям за сегодня для текущего пользователя
+            var stats = Data.DatabaseHelper.GetUserRentalsStatsByCarForToday(MainWindow.CurrentUser.UserID);
+            var carNames = stats.Select(s => $"{s.CarName} ({s.TotalRevenue}₽)").ToArray();
+            var counts = stats.Select(s => (double)s.Count).ToArray();
+            UserStatsChart.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Аренды",
+                    Values = new ChartValues<double>(counts)
+                }
+            };
+            UserStatsChart.AxisX.Clear();
+            UserStatsChart.AxisX.Add(new Axis { Title = "Автомобиль", Labels = carNames });
+            UserStatsChart.AxisY.Clear();
+            UserStatsChart.AxisY.Add(new Axis { Title = "Кол-во аренд" });
+        }
+
+        private void ExportUserPdfButton_Click(object sender, RoutedEventArgs e)
+        {
+            var stats = Data.DatabaseHelper.GetUserRentalsStatsByCarForToday(MainWindow.CurrentUser.UserID);
+            var dlg = new Microsoft.Win32.SaveFileDialog { Filter = "PDF files (*.pdf)|*.pdf", FileName = "user_report.pdf" };
+            if (dlg.ShowDialog() == true)
+            {
+                var doc = new Document();
+                var section = doc.AddSection();
+                var title = section.AddParagraph("Ваши аренды за сегодня");
+                title.Format.Font.Size = 16;
+                title.Format.Font.Bold = true;
+                title.Format.SpaceAfter = "1cm";
+                decimal total = 0;
+                foreach (var stat in stats)
+                {
+                    var p = section.AddParagraph($"{stat.CarName}: {stat.Count} ({stat.TotalRevenue}₽)");
+                    p.Format.Font.Size = 12;
+                    total += stat.TotalRevenue;
+                }
+                section.AddParagraph($"Итого: {total}₽").Format.Font.Bold = true;
+                var renderer = new MigraDoc.Rendering.PdfDocumentRenderer(true);
+                renderer.Document = doc;
+                renderer.RenderDocument();
+                renderer.PdfDocument.Save(dlg.FileName);
+            }
         }
     }
 } 

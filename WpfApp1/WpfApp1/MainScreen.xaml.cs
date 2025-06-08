@@ -79,8 +79,8 @@ namespace WpfApp1
                 btn.Width = 80;
                 btn.Height = 40;
                 btn.Tag = car;
-                btn.Background = new SolidColorBrush(Colors.LightBlue);
-                btn.BorderBrush = new SolidColorBrush(Colors.DarkBlue);
+                btn.Background = new SolidColorBrush(System.Windows.Media.Colors.LightBlue);
+                btn.BorderBrush = new SolidColorBrush(System.Windows.Media.Colors.DarkBlue);
                 btn.Click += CarMarker_Click;
                 
                 // Базовые координаты из БД

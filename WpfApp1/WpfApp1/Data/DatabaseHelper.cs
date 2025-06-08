@@ -8,7 +8,7 @@ namespace WpfApp1.Data
 {
     public class DatabaseHelper
     {
-        private static readonly string connectionString = "Server=XYUNA\\SQLEXPRESS; Database=777; Trusted_Connection=True;";
+        private static readonly string connectionString = "Server=xyuna\\sqlexpress;Database=777;Trusted_Connection=True;";
 
         // Public property to access the connection string
         public static string ConnectionString
@@ -269,18 +269,16 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
             }
             catch (Exception ex)
             {
-                // Здесь можно добавить логирование ошибки
             }
             return cars;
         }
 
-        // ----- New Methods added for AdminPanel integration -----
+        //AdminPanel 
 
         public static List<User> GetUsers()
         {
             List<User> users = new List<User>();
             
-            // Используем прямой запрос к таблице Users без добавления полей
             string query = @"SELECT UserID, Login, PasswordHash, FullName, Phone, 
                                   Email, Balance, Role
                            FROM Users";
@@ -291,7 +289,6 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
                 {
                     conn.Open();
                     
-                    // Запрашиваем пользователей из таблицы
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -307,17 +304,15 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
                                 user.Email = reader.IsDBNull(5) ? "" : reader.GetString(5);
                                 user.Balance = reader.GetDecimal(6);
                                 user.Role = reader.GetString(7);
-                                // IsBlocked установим по умолчанию в false
                                 user.IsBlocked = false;
                                 users.Add(user);
                             }
                         }
                     }
                     
-                    // Если нет пользователей, добавим тестовых (для демонстрации)
                     if (users.Count == 0)
                     {
-                        // Добавляем тестовых пользователей только если БД пуста
+                        // тестовых если БД пуста
                         string insertUsersQuery = @"
                             INSERT INTO Users (Login, PasswordHash, FullName, Phone, Email, Balance, Role)
                             VALUES ('admin', @adminHash, 'Администратор', '+7(999)123-45-67', 'admin@carsharing.ru', 5000, 'Admin');
@@ -339,7 +334,6 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
                             {
                                 insertCmd.ExecuteNonQuery();
                                 
-                                // После вставки снова запросим пользователей
                                 users.Clear();
                                 using (SqlCommand refreshCmd = new SqlCommand(query, conn))
                                 {
@@ -372,10 +366,8 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
             }
             catch (Exception ex)
             {
-                // Выводим ошибку в консоль для отладки
                 Console.WriteLine($"Error getting users: {ex.Message}");
                 
-                // Если возникла ошибка, возвращаем хотя бы несколько тестовых пользователей
                 if (users.Count == 0)
                 {
                     users.Add(new User
@@ -449,68 +441,38 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
             }
             catch (Exception ex)
             {
-                // Log error if necessary
+                
             }
             return cars;
         }
 
         public static bool UpdateUserBlockStatus(int userId, bool isBlocked)
         {
-            // Используем поле Role для хранения статуса блокировки
-            // Значение 'Blocked' будет означать заблокированного пользователя
-            string query = "UPDATE Users SET Role = @Role WHERE UserID = @UserID";
+            string query = "UPDATE Users SET IsBlocked = @IsBlocked WHERE UserID = @UserID";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    
-                    // Проверяем существование пользователя
+                    using (SqlCommand checkColumn = new SqlCommand("IF COL_LENGTH('Users', 'IsBlocked') IS NULL BEGIN ALTER TABLE Users ADD IsBlocked BIT DEFAULT 0 NOT NULL END", conn))
+                    {
+                        checkColumn.ExecuteNonQuery();
+                    }
                     using (SqlCommand checkUser = new SqlCommand("SELECT COUNT(*) FROM Users WHERE UserID = @UserID", conn))
                     {
                         checkUser.Parameters.AddWithValue("@UserID", userId);
                         int count = (int)checkUser.ExecuteScalar();
-                        
                         if (count == 0)
                         {
                             Console.WriteLine($"Пользователь с ID {userId} не найден");
                             return false;
                         }
                     }
-                    
-                    // Получаем текущую роль пользователя
-                    string currentRole = "User";
-                    using (SqlCommand getRoleCmd = new SqlCommand("SELECT Role FROM Users WHERE UserID = @UserID", conn))
-                    {
-                        getRoleCmd.Parameters.AddWithValue("@UserID", userId);
-                        object roleResult = getRoleCmd.ExecuteScalar();
-                        if (roleResult != null && roleResult != DBNull.Value)
-                        {
-                            currentRole = roleResult.ToString();
-                        }
-                    }
-                    
-                    // Устанавливаем новую роль в зависимости от текущей и запрошенного статуса блокировки
-                    string newRole;
-                    
-                    if (isBlocked)
-                    {
-                        // Если блокируем, устанавливаем роль "Blocked", но сохраняем "Admin" для администраторов
-                        newRole = (currentRole == "Admin") ? "Admin" : "Blocked";
-                    }
-                    else
-                    {
-                        // Если разблокируем, устанавливаем роль "User" или оставляем "Admin"
-                        newRole = (currentRole == "Admin") ? "Admin" : "User";
-                    }
-                    
-                    // Выполняем обновление роли
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Role", newRole);
+                        cmd.Parameters.AddWithValue("@IsBlocked", isBlocked);
                         cmd.Parameters.AddWithValue("@UserID", userId);
                         int rows = cmd.ExecuteNonQuery();
-                        
                         if (rows > 0)
                         {
                             Console.WriteLine($"Пользователь с ID {userId} успешно {(isBlocked ? "заблокирован" : "разблокирован")}");
@@ -535,7 +497,6 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
         {
             List<string> history = new List<string>();
             
-            // Сначала проверим, существует ли таблица Rentals
             string checkTable = @"
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Rentals')
                 BEGIN
@@ -725,78 +686,168 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
             return history;
         }
 
+        public static bool DeleteUser(int userId)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionString))
+                {
+                    conn.Open();
+
+                    // 1. Удалить все сообщения пользователя
+                    using (SqlCommand cmd = new SqlCommand("DELETE FROM Messages WHERE SenderID = @UserID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 2. Найти все RentalID пользователя
+                    List<int> rentalIds = new List<int>();
+                    using (SqlCommand cmd = new SqlCommand("SELECT RentalID FROM Rentals WHERE UserID = @UserID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                                rentalIds.Add(reader.GetInt32(0));
+                        }
+                    }
+
+                    // 3. Удалить все платежи по этим арендам
+                    foreach (var rentalId in rentalIds)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("DELETE FROM Payments WHERE RentalID = @RentalID", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@RentalID", rentalId);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // 4. Удалить все аренды пользователя
+                    using (SqlCommand cmd = new SqlCommand("DELETE FROM Rentals WHERE UserID = @UserID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 5. Найти все чаты, где он User или Admin
+                    List<int> chatIds = new List<int>();
+                    using (SqlCommand cmd = new SqlCommand("SELECT ChatID FROM SupportChats WHERE UserID = @UserID OR AdminID = @UserID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                                chatIds.Add(reader.GetInt32(0));
+                        }
+                    }
+
+                    // 6. Удалить все сообщения в этих чатах
+                    foreach (var chatId in chatIds)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("DELETE FROM Messages WHERE ChatID = @ChatID", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@ChatID", chatId);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // 7. Удалить чаты
+                    foreach (var chatId in chatIds)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("DELETE FROM SupportChats WHERE ChatID = @ChatID", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@ChatID", chatId);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // 8. Удалить пользователя
+                    using (SqlCommand cmd = new SqlCommand("DELETE FROM Users WHERE UserID = @UserID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        int rows = cmd.ExecuteNonQuery();
+                        return rows > 0;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static bool DeleteCar(int carId)
         {
-            // Сначала проверяем, есть ли связанные записи в таблице Rentals
-            string checkQuery = "SELECT COUNT(*) FROM Rentals WHERE CarID = @CarID";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    
-                    // Проверяем наличие связанных записей
-                    using (SqlCommand cmd = new SqlCommand(checkQuery, conn))
+                    // 1. Найти все RentalID по машине
+                    List<int> rentalIds = new List<int>();
+                    using (SqlCommand cmd = new SqlCommand("SELECT RentalID FROM Rentals WHERE CarID = @CarID", conn))
                     {
                         cmd.Parameters.AddWithValue("@CarID", carId);
-                        int count = (int)cmd.ExecuteScalar();
-                        
-                        if (count > 0)
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            // Если есть связанные записи, возвращаем false
-                            return false;
+                            while (reader.Read())
+                                rentalIds.Add(reader.GetInt32(0));
                         }
                     }
-                    
-                    // Если связанных записей нет, удаляем автомобиль
-                    // Получаем CarDetailID для последующего удаления
-                    int carDetailId = 0;
-                    using (SqlCommand getDetailCmd = new SqlCommand("SELECT CarDetailID FROM Cars WHERE CarID = @CarID", conn))
+                    // 2. Удалить все платежи по этим арендам
+                    foreach (var rentalId in rentalIds)
                     {
-                        getDetailCmd.Parameters.AddWithValue("@CarID", carId);
-                        var result = getDetailCmd.ExecuteScalar();
-                        if (result != null && result != DBNull.Value)
+                        using (SqlCommand cmd = new SqlCommand("DELETE FROM Payments WHERE RentalID = @RentalID", conn))
                         {
-                            carDetailId = Convert.ToInt32(result);
+                            cmd.Parameters.AddWithValue("@RentalID", rentalId);
+                            cmd.ExecuteNonQuery();
                         }
                     }
-                    
-                    // Удаляем запись из таблицы Cars
-                    using (SqlCommand deleteCarCmd = new SqlCommand("DELETE FROM Cars WHERE CarID = @CarID", conn))
+                    // 3. Удалить все аренды по машине
+                    using (SqlCommand cmd = new SqlCommand("DELETE FROM Rentals WHERE CarID = @CarID", conn))
                     {
-                        deleteCarCmd.Parameters.AddWithValue("@CarID", carId);
-                        int rowsAffected = deleteCarCmd.ExecuteNonQuery();
-                        
-                        if (rowsAffected > 0 && carDetailId > 0)
-                        {
-                            // Удаляем запись из таблицы CarDetails, если она больше не используется
-                            using (SqlCommand checkDetailUseCmd = new SqlCommand("SELECT COUNT(*) FROM Cars WHERE CarDetailID = @CarDetailID", conn))
-                            {
-                                checkDetailUseCmd.Parameters.AddWithValue("@CarDetailID", carDetailId);
-                                int detailUseCount = (int)checkDetailUseCmd.ExecuteScalar();
-                                
-                                if (detailUseCount == 0)
-                                {
-                                    using (SqlCommand deleteDetailCmd = new SqlCommand("DELETE FROM CarDetails WHERE CarDetailID = @CarDetailID", conn))
-                                    {
-                                        deleteDetailCmd.Parameters.AddWithValue("@CarDetailID", carDetailId);
-                                        deleteDetailCmd.ExecuteNonQuery();
-                                    }
-                                }
-                            }
-                            
-                            return true;
-                        }
-                        
-                        return rowsAffected > 0;
+                        cmd.Parameters.AddWithValue("@CarID", carId);
+                        cmd.ExecuteNonQuery();
+                    }
+                    // 4. Удалить саму машину
+                    using (SqlCommand cmd = new SqlCommand("DELETE FROM Cars WHERE CarID = @CarID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CarID", carId);
+                        int rows = cmd.ExecuteNonQuery();
+                        return rows > 0;
                     }
                 }
             }
-            catch (Exception ex)
+            catch { return false; }
+        }
+
+        public static bool DeleteSupportChat(string chatId)
+        {
+            try
             {
-                // Log error if necessary
-                return false;
+                using (SqlConnection conn = new SqlConnection(ConnectionString))
+                {
+                    conn.Open();
+                    int id;
+                    if (!int.TryParse(chatId, out id))
+                        return false;
+                    // 1. Удалить все сообщения чата
+                    using (SqlCommand cmd = new SqlCommand("DELETE FROM Messages WHERE ChatID = @ChatID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ChatID", id);
+                        cmd.ExecuteNonQuery();
+                    }
+                    // 2. Удалить сам чат
+                    using (SqlCommand cmd = new SqlCommand("DELETE FROM SupportChats WHERE ChatID = @ChatID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ChatID", id);
+                        int rows = cmd.ExecuteNonQuery();
+                        return rows > 0;
+                    }
+                }
             }
+            catch { return false; }
         }
 
         public static bool CreateTestRental(int carId)
@@ -1603,5 +1654,102 @@ CREATE INDEX IX_Cars_Location ON Cars(Latitude, Longitude);
                 return false;
             }
         }
+
+        public class RentalStatsItem
+        {
+            public string CarName { get; set; }
+            public int Count { get; set; }
+            public decimal TotalRevenue { get; set; }
+        }
+
+        public static List<RentalStatsItem> GetRentalsStatsByCarForToday()
+        {
+            var stats = new List<RentalStatsItem>();
+            string query = @"SELECT cd.Brand + ' ' + cd.Model AS CarName, COUNT(*) AS RentalCount, 
+                                   ISNULL(SUM(p.Amount), 0) AS TotalRevenue
+                             FROM Rentals r
+                             JOIN Cars c ON r.CarID = c.CarID
+                             JOIN CarDetails cd ON c.CarDetailID = cd.CarDetailID
+                             LEFT JOIN Payments p ON p.RentalID = r.RentalID AND p.Status = 'Completed'
+                             WHERE CAST(r.StartTime AS DATE) = CAST(GETDATE() AS DATE)
+                             GROUP BY cd.Brand, cd.Model";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                stats.Add(new RentalStatsItem
+                                {
+                                    CarName = reader.GetString(0),
+                                    Count = reader.GetInt32(1),
+                                    TotalRevenue = reader.IsDBNull(2) ? 0 : reader.GetDecimal(2)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+            return stats;
+        }
+
+        public static List<RentalStatsItem> GetUserRentalsStatsByCarForToday(int userId)
+        {
+            var stats = new List<RentalStatsItem>();
+            string query = @"SELECT cd.Brand + ' ' + cd.Model AS CarName, COUNT(*) AS RentalCount, 
+                                   ISNULL(SUM(p.Amount), 0) AS TotalRevenue
+                             FROM Rentals r
+                             JOIN Cars c ON r.CarID = c.CarID
+                             JOIN CarDetails cd ON c.CarDetailID = cd.CarDetailID
+                             LEFT JOIN Payments p ON p.RentalID = r.RentalID AND p.Status = 'Completed'
+                             WHERE r.UserID = @UserID AND CAST(r.StartTime AS DATE) = CAST(GETDATE() AS DATE)
+                             GROUP BY cd.Brand, cd.Model";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                stats.Add(new RentalStatsItem
+                                {
+                                    CarName = reader.GetString(0),
+                                    Count = reader.GetInt32(1),
+                                    TotalRevenue = reader.IsDBNull(2) ? 0 : reader.GetDecimal(2)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+            return stats;
+        }
+
+        public static void AddPayment(int rentalId, decimal amount)
+        {
+            string query = @"INSERT INTO Payments (RentalID, Amount, Status) VALUES (@RentalID, @Amount, 'Completed')";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@RentalID", rentalId);
+                    cmd.Parameters.AddWithValue("@Amount", amount);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
-}
+} 

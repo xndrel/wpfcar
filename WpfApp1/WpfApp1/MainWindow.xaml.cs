@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using WpfApp1.Validators;
 
 namespace WpfApp1
 {
@@ -38,9 +39,10 @@ namespace WpfApp1
             string phone = PhoneTextBox.Text.Trim();
             string email = EmailTextBox.Text.Trim();
             string password = PasswordBox.Password;
-            if (string.IsNullOrEmpty(fullName) || string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(password))
+            string errorMsg;
+            if (!InputValidator.ValidateRegistration(fullName, phone, email, password, out errorMsg))
             {
-                MessageBox.Show("Пожалуйста, заполните все обязательные поля (ФИО, телефон, пароль).");
+                MessageBox.Show(errorMsg, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             if (WpfApp1.Data.DatabaseHelper.CheckUserExists(phone))

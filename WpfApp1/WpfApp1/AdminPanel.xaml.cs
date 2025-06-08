@@ -8,6 +8,13 @@ using System.Windows.Media.Imaging;
 using System.Linq;
 using WpfApp1.Data;
 using System.Text;
+using System.Text.RegularExpressions;
+using LiveCharts;
+using LiveCharts.Wpf;
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
 
 namespace WpfApp1
 {
@@ -21,6 +28,8 @@ namespace WpfApp1
             LoadUsers();
             LoadCars();
             LoadChats();
+            LoadAdminStatsChart();
+            ExportAdminPdfButton.Click += ExportAdminPdfButton_Click;
 
             // Позволяет редактировать данные пользователя двойным кликом по элементу списка
             UsersListView.MouseDoubleClick += UsersListView_MouseDoubleClick;
@@ -59,8 +68,8 @@ namespace WpfApp1
                 btn.Width = 80;
                 btn.Height = 40;
                 btn.Tag = car;
-                btn.Background = new SolidColorBrush(car.IsAvailable ? Colors.LightGreen : Colors.LightCoral);
-                btn.BorderBrush = new SolidColorBrush(Colors.DarkBlue);
+                btn.Background = new SolidColorBrush(System.Windows.Media.Colors.LightGreen);
+                btn.BorderBrush = new SolidColorBrush(System.Windows.Media.Colors.DarkBlue);
                 btn.Click += AdminCarMarker_Click;
                 
                 // Добавляем обработчики для перетаскивания
@@ -329,36 +338,24 @@ namespace WpfApp1
         {
             if (UsersListView.SelectedItem is User selectedUser)
             {
-                if (selectedUser.IsBlocked)
+                if (MessageBox.Show("Вы уверены, что хотите заблокировать пользователя?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show("Пользователь уже заблокирован.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
-                }
-                
-                // Подтверждение действия
-                MessageBoxResult result = MessageBox.Show(
-                    $"Вы действительно хотите заблокировать пользователя {selectedUser.FullName}?", 
-                    "Подтверждение блокировки", 
-                    MessageBoxButton.YesNo, 
-                    MessageBoxImage.Question);
-                
-                if (result == MessageBoxResult.Yes)
-                {
-                    bool success = Data.DatabaseHelper.UpdateUserBlockStatus(selectedUser.UserID, true);
-                    if (success)
+                    bool result = Data.DatabaseHelper.UpdateUserBlockStatus(selectedUser.UserID, true);
+                    if (result)
                     {
-                        MessageBox.Show($"Пользователь {selectedUser.FullName} заблокирован.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                        LoadUsers(); // Перезагружаем список пользователей
+                        MessageBox.Show("Пользователь успешно заблокирован.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                        selectedUser.IsBlocked = true;
+                        LoadUsers();
                     }
                     else
                     {
-                        MessageBox.Show("Ошибка блокировки пользователя. Проверьте подключение к базе данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Ошибка при блокировке пользователя.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Выберите пользователя для блокировки.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Пожалуйста, выберите пользователя для блокировки.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -366,36 +363,24 @@ namespace WpfApp1
         {
             if (UsersListView.SelectedItem is User selectedUser)
             {
-                if (!selectedUser.IsBlocked)
+                if (MessageBox.Show("Вы уверены, что хотите разблокировать пользователя?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show("Пользователь не заблокирован.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
-                }
-                
-                // Подтверждение действия
-                MessageBoxResult result = MessageBox.Show(
-                    $"Вы действительно хотите разблокировать пользователя {selectedUser.FullName}?", 
-                    "Подтверждение разблокировки", 
-                    MessageBoxButton.YesNo, 
-                    MessageBoxImage.Question);
-                
-                if (result == MessageBoxResult.Yes)
-                {
-                    bool success = Data.DatabaseHelper.UpdateUserBlockStatus(selectedUser.UserID, false);
-                    if (success)
+                    bool result = Data.DatabaseHelper.UpdateUserBlockStatus(selectedUser.UserID, false);
+                    if (result)
                     {
-                        MessageBox.Show($"Пользователь {selectedUser.FullName} разблокирован.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                        LoadUsers(); // Перезагружаем список пользователей
+                        MessageBox.Show("Пользователь успешно разблокирован.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                        selectedUser.IsBlocked = false;
+                        LoadUsers();
                     }
                     else
                     {
-                        MessageBox.Show("Ошибка при разблокировке пользователя. Проверьте подключение к базе данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Ошибка при разблокировке пользователя.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Выберите пользователя для разблокировки.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Пожалуйста, выберите пользователя для разблокировки.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -724,6 +709,135 @@ namespace WpfApp1
             // Закрываем текущее окно админ-панели
             this.Close();
         }
+
+        // ----- Новые обработчики CRUD операций для админ-панели -----
+
+        private void DeleteUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (UsersListView.SelectedItem is User selectedUser)
+            {
+                if (MessageBox.Show("Вы уверены, что хотите удалить пользователя?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    bool result = Data.DatabaseHelper.DeleteUser(selectedUser.UserID);
+                    if (result)
+                    {
+                        MessageBox.Show("Пользователь успешно удален.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                        LoadUsers();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка при удалении пользователя.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Пожалуйста, выберите пользователя для удаления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void DeleteCarButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CarsListView.SelectedItem is Car selectedCar)
+            {
+                if (MessageBox.Show("Вы уверены, что хотите удалить машину?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    bool result = Data.DatabaseHelper.DeleteCar(selectedCar.CarID);
+                    if (result)
+                    {
+                        MessageBox.Show("Машина успешно удалена.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                        LoadCars();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка при удалении машины.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Пожалуйста, выберите машину для удаления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void DeleteChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChatsListView.SelectedItem is string selectedChatString)
+            {
+                // Используем регулярное выражение для извлечения ID из строки вида "Имя (ID: 123)"
+                Match match = Regex.Match(selectedChatString, @"ID:\s*(\d+)");
+                if(match.Success)
+                {
+                    string idStr = match.Groups[1].Value;
+                    if (MessageBox.Show("Вы уверены, что хотите удалить чат поддержки?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        bool result = Data.DatabaseHelper.DeleteSupportChat(idStr);
+                        if(result)
+                        {
+                            MessageBox.Show("Чат поддержки успешно удален.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                            LoadChats();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка при удалении чата поддержки.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Не удалось определить ID чата из выбранной строки.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        public void LoadAdminStatsChart()
+        {
+            // Получаем статистику аренд по автомобилям за сегодня
+            var stats = Data.DatabaseHelper.GetRentalsStatsByCarForToday();
+            var carNames = stats.Select(s => $"{s.CarName} ({s.TotalRevenue}₽)").ToArray();
+            var counts = stats.Select(s => (double)s.Count).ToArray();
+            AdminStatsChart.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Аренды",
+                    Values = new ChartValues<double>(counts)
+                }
+            };
+            AdminStatsChart.AxisX.Clear();
+            AdminStatsChart.AxisX.Add(new Axis { Title = "Автомобиль", Labels = carNames });
+            AdminStatsChart.AxisY.Clear();
+            AdminStatsChart.AxisY.Add(new Axis { Title = "Кол-во аренд" });
+        }
+
+        private void ExportAdminPdfButton_Click(object sender, RoutedEventArgs e)
+        {
+            var stats = Data.DatabaseHelper.GetRentalsStatsByCarForToday();
+            var dlg = new Microsoft.Win32.SaveFileDialog { Filter = "PDF files (*.pdf)|*.pdf", FileName = "admin_report.pdf" };
+            if (dlg.ShowDialog() == true)
+            {
+                var doc = new Document();
+                var section = doc.AddSection();
+                var title = section.AddParagraph("Отчёт по арендам за сегодня");
+                title.Format.Font.Size = 16;
+                title.Format.Font.Bold = true;
+                title.Format.SpaceAfter = "1cm";
+                decimal total = 0;
+                foreach (var stat in stats)
+                {
+                    var p = section.AddParagraph($"{stat.CarName}: {stat.Count} ({stat.TotalRevenue}₽)");
+                    p.Format.Font.Size = 12;
+                    total += stat.TotalRevenue;
+                }
+                section.AddParagraph($"Итого: {total}₽").Format.Font.Bold = true;
+                var renderer = new MigraDoc.Rendering.PdfDocumentRenderer(true);
+                renderer.Document = doc;
+                renderer.RenderDocument();
+                renderer.PdfDocument.Save(dlg.FileName);
+            }
+        }
+
+        // Конец класса AdminPanel
     }
 
     // Модель пользователя для админки (ожидается, что в таблице Users есть поле IsBlocked)

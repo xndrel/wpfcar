@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -51,4 +51,4 @@ namespace WpfApp1.Converters
             return false;
         }
     }
-} 
+}
